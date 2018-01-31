@@ -47,7 +47,7 @@ class SwipeActionButton: UIButton {
         let highlightedTextColor = action.highlightedTextColor ?? tintColor
         highlightedBackgroundColor = action.highlightedBackgroundColor ?? UIColor.black.withAlphaComponent(0.1)
 
-        titleLabel?.font = action.font ?? UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        titleLabel?.font = action.font ?? UIFont.systemFont(ofSize: 15)
         titleLabel?.textAlignment = .center
         titleLabel?.lineBreakMode = .byWordWrapping
         titleLabel?.numberOfLines = 0
@@ -59,6 +59,8 @@ class SwipeActionButton: UIButton {
         setTitleColor(highlightedTextColor, for: .highlighted)
         setImage(action.image, for: .normal)
         setImage(action.highlightedImage ?? action.image, for: .highlighted)
+        
+        titleEdgeInsets = UIEdgeInsets(top: 0.0, left: spacing, bottom: 0.0, right: 0.0)
     }
     
     override var isHighlighted: Bool {
@@ -74,7 +76,7 @@ class SwipeActionButton: UIButton {
         let textWidth = titleBoundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)).width
         let imageWidth = currentImage?.size.width ?? 0
         
-        return min(width, max(textWidth, imageWidth) + contentEdgeInsets.left + contentEdgeInsets.right)
+        return textWidth + imageWidth + contentEdgeInsets.left + contentEdgeInsets.right + spacing
     }
     
     func titleBoundingRect(with size: CGSize) -> CGRect {
@@ -86,17 +88,6 @@ class SwipeActionButton: UIButton {
                                   context: nil).integral
     }
     
-    override func titleRect(forContentRect contentRect: CGRect) -> CGRect {
-        var rect = contentRect.center(size: titleBoundingRect(with: contentRect.size).size)
-        rect.origin.y = alignmentRect.minY + imageHeight + currentSpacing
-        return rect.integral
-    }
-    
-    override func imageRect(forContentRect contentRect: CGRect) -> CGRect {
-        var rect = contentRect.center(size: currentImage?.size ?? .zero)
-        rect.origin.y = alignmentRect.minY + (imageHeight - rect.height) / 2
-        return rect
-    }
 }
 
 extension CGRect {
